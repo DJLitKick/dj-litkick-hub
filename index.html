@@ -12,7 +12,7 @@
 </head>
 <body>
 
-  <!-- ── LOADER ── -->
+  <!-- 1 · LOADER -->
   <div id="loader">
     <div class="loader-brand">DJ <span class="accent">LitKick</span></div>
     <div class="loader-bar-wrap">
@@ -21,7 +21,7 @@
     <div id="loader-percent">0%</div>
   </div>
 
-  <!-- ── FIXED HEADER ── -->
+  <!-- 2 · FIXED HEADER -->
   <header class="site-header" id="site-header">
     <a class="site-logo" href="#">DJ <span class="accent">LitKick</span></a>
     <nav class="site-nav">
@@ -36,7 +36,7 @@
     </button>
   </header>
 
-  <!-- ── MOBILE MENU ── -->
+  <!-- MOBILE MENU -->
   <div class="mobile-menu" id="mobile-menu">
     <a class="mobile-link" href="#">Club</a>
     <a class="mobile-link" href="#">Wedding</a>
@@ -45,16 +45,8 @@
     <a class="mobile-link mobile-cta" href="mailto:info@dj-litkick.com">Book Now</a>
   </div>
 
-  <!-- ── VIDEO BACKGROUND ── -->
-  <div class="video-bg">
-    <video autoplay loop muted playsinline id="bg-video">
-      <source src="dj-litkick-main.mp4" type="video/mp4" />
-    </video>
-    <div class="video-overlay"></div>
-  </div>
-
-  <!-- ── HERO ── -->
-  <section id="hero" class="hero-standalone">
+  <!-- 3 · HERO STANDALONE (100vh, fades out as scroll begins) -->
+  <section id="hero-standalone" class="hero-standalone">
     <div class="hero-inner">
       <span class="hero-label">Munich &nbsp;·&nbsp; Europe</span>
       <h1 class="hero-heading">
@@ -69,15 +61,20 @@
     </div>
   </section>
 
-  <!-- ── DARK OVERLAY (for stats section) ── -->
-  <div id="dark-overlay"></div>
-
-  <!-- ── MARQUEE ── -->
-  <div class="marquee-wrap" id="marquee" data-scroll-speed="-28">
-    <p class="marquee-text">HIP HOP &nbsp;·&nbsp; TRAP &nbsp;·&nbsp; R&amp;B &nbsp;·&nbsp; GERMAN DJ CONTEST 2020 &nbsp;·&nbsp; MUNICH &nbsp;·&nbsp; EUROPE &nbsp;·&nbsp; DJ LITKICK &nbsp;·&nbsp; HIP HOP &nbsp;·&nbsp; TRAP &nbsp;·&nbsp; R&amp;B &nbsp;·&nbsp; GERMAN DJ CONTEST 2020 &nbsp;·&nbsp; MUNICH &nbsp;·&nbsp; EUROPE &nbsp;·&nbsp; DJ LITKICK &nbsp;·&nbsp;</p>
+  <!-- 4 · CANVAS (fixed, full viewport, reveals via circle-wipe) -->
+  <div class="canvas-wrap" id="canvas-wrap">
+    <canvas id="canvas"></canvas>
   </div>
 
-  <!-- ── SCROLL CONTAINER ── -->
+  <!-- 5 · DARK OVERLAY (fades in for stats section) -->
+  <div id="dark-overlay"></div>
+
+  <!-- 6 · MARQUEE (fixed, scroll-driven) -->
+  <div class="marquee-wrap" id="marquee" data-scroll-speed="-28">
+    <p class="marquee-text">HIP HOP &nbsp;·&nbsp; TRAP &nbsp;·&nbsp; R&amp;B &nbsp;·&nbsp; GERMAN DJ CONTEST 2020 &nbsp;·&nbsp; MUNICH &nbsp;·&nbsp; EUROPE &nbsp;·&nbsp; DJ LITKICK &nbsp;·&nbsp; HIP HOP &nbsp;·&nbsp; TRAP &nbsp;·&nbsp; R&amp;B &nbsp;·&nbsp; GERMAN DJ CONTEST 2020 &nbsp;·&nbsp;</p>
+  </div>
+
+  <!-- 7 · SCROLL CONTAINER (1000vh) -->
   <div id="scroll-container">
 
     <!-- SECTION 1 · Club DJ -->
@@ -175,7 +172,7 @@
 
   </div><!-- /scroll-container -->
 
-  <!-- ── FOOTER ── -->
+  <!-- FOOTER -->
   <footer class="site-footer">
     <span class="footer-logo">DJ <span class="accent">LitKick</span></span>
     <a href="https://www.instagram.com/dj_litkick" target="_blank" rel="noopener noreferrer" class="footer-ig">Instagram &nbsp;@dj_litkick</a>
