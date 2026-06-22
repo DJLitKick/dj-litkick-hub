@@ -373,6 +373,34 @@ a { color: inherit; text-decoration: none; }
 }
 .section-cta-link:hover { border-color: var(--gold); gap: 0.75rem; }
 
+/* ── CHOOSE YOUR OCCASION ── */
+.section-occasion { justify-content: center; }
+.occasion-inner { max-width: 560px; width: 90vw; }
+.occasion-list { display: flex; flex-direction: column; margin-top: 0.5rem; }
+.occasion-link {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text);
+  transition: color 0.2s;
+}
+.occasion-list .occasion-link:first-child { border-top: 1px solid rgba(201,168,76,0.2); }
+.occasion-link:hover { color: var(--gold); }
+.occasion-link:hover .occasion-arrow { transform: translateX(6px); }
+.occasion-num {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  flex-shrink: 0;
+  width: 1.8rem;
+}
+.occasion-name { font-size: clamp(1.2rem, 2.5vw, 2rem); letter-spacing: -0.01em; flex: 1; }
+.occasion-arrow { font-size: 1.1rem; color: var(--gold); transition: transform 0.2s; }
+
 /* ── STATS ── */
 .section-stats {
   justify-content: center;
@@ -533,6 +561,9 @@ a { color: inherit; text-decoration: none; }
   .section-inner { padding: 2rem 1.75rem; width: 100%; }
   .section-heading { font-size: clamp(1.8rem, 7vw, 2.8rem); }
   .section-body { font-size: 0.9rem; max-width: none; }
+
+  .occasion-inner { max-width: none; width: 100%; }
+  .occasion-name { font-size: clamp(1.1rem, 5vw, 1.6rem); }
 
   .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; padding: 2rem 6vw; }
   .stat-top { font-size: clamp(2.5rem, 10vw, 4rem); }

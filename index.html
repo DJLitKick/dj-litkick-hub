@@ -78,9 +78,40 @@
   <!-- 7 · SCROLL CONTAINER (1000vh) -->
   <div id="scroll-container">
 
+    <!-- SECTION 0 · Choose Your Occasion -->
+    <section class="scroll-section section-occasion"
+             data-enter="10" data-leave="20" data-animation="stagger-up">
+      <div class="section-inner occasion-inner">
+        <span class="section-label">000 &nbsp;/&nbsp; Navigate</span>
+        <h2 class="section-heading">Choose Your<br>Occasion</h2>
+        <nav class="occasion-list">
+          <a href="#" class="occasion-link" data-target="section-wedding">
+            <span class="occasion-num">01</span>
+            <span class="occasion-name">Wedding DJ</span>
+            <span class="occasion-arrow">&rarr;</span>
+          </a>
+          <a href="#" class="occasion-link" data-target="section-private">
+            <span class="occasion-num">02</span>
+            <span class="occasion-name">Private Events</span>
+            <span class="occasion-arrow">&rarr;</span>
+          </a>
+          <a href="#" class="occasion-link" data-target="section-business">
+            <span class="occasion-num">03</span>
+            <span class="occasion-name">Business Events</span>
+            <span class="occasion-arrow">&rarr;</span>
+          </a>
+          <a href="#" class="occasion-link" data-target="section-club">
+            <span class="occasion-num">04</span>
+            <span class="occasion-name">Club DJ</span>
+            <span class="occasion-arrow">&rarr;</span>
+          </a>
+        </nav>
+      </div>
+    </section>
+
     <!-- SECTION 1 · Wedding DJ -->
-    <section class="scroll-section section-content align-left"
-             data-enter="10" data-leave="22" data-animation="slide-left">
+    <section id="section-wedding" class="scroll-section section-content align-left"
+             data-enter="22" data-leave="34" data-animation="slide-left">
       <div class="section-inner">
         <span class="section-label">001 &nbsp;/&nbsp; Wedding DJ</span>
         <h2 class="section-heading">Your Perfect<br>Night, Planned</h2>
@@ -91,8 +122,8 @@
     </section>
 
     <!-- SECTION 2 · Private Events -->
-    <section class="scroll-section section-content align-right"
-             data-enter="27" data-leave="39" data-animation="slide-right">
+    <section id="section-private" class="scroll-section section-content align-right"
+             data-enter="37" data-leave="49" data-animation="slide-right">
       <div class="section-inner">
         <span class="section-label">002 &nbsp;/&nbsp; Private Events</span>
         <h2 class="section-heading">Your Vibe,<br>Your Rules</h2>
@@ -103,8 +134,8 @@
     </section>
 
     <!-- SECTION 3 · Business Events -->
-    <section class="scroll-section section-content align-left"
-             data-enter="44" data-leave="56" data-animation="rotate-in">
+    <section id="section-business" class="scroll-section section-content align-left"
+             data-enter="52" data-leave="64" data-animation="rotate-in">
       <div class="section-inner">
         <span class="section-label">003 &nbsp;/&nbsp; Business Events</span>
         <h2 class="section-heading">Professional<br>Energy</h2>
@@ -115,8 +146,8 @@
     </section>
 
     <!-- SECTION 4 · Club DJ -->
-    <section class="scroll-section section-content align-right"
-             data-enter="61" data-leave="73" data-animation="scale-up">
+    <section id="section-club" class="scroll-section section-content align-right"
+             data-enter="66" data-leave="73" data-animation="scale-up">
       <div class="section-inner">
         <span class="section-label">004 &nbsp;/&nbsp; Club DJ</span>
         <h2 class="section-heading">Fill the Floor,<br>Every Time</h2>

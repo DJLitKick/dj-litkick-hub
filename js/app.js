@@ -156,11 +156,13 @@ window.addEventListener("scroll", () => {
 
 /* ── 9. SECTION POSITIONING ── */
 function positionSections() {
-  const h = scrollContainer.offsetHeight;
+  const h  = scrollContainer.offsetHeight;
+  const vh = window.innerHeight;
   sections.forEach(s => {
     const enter = parseFloat(s.dataset.enter) / 100;
     const leave = parseFloat(s.dataset.leave) / 100;
-    s.style.top       = ((enter + leave) / 2 * h) + "px";
+    const mid   = (enter + leave) / 2;
+    s.style.top       = (mid * (h - vh) + vh / 2) + "px";
     s.style.transform = "translateY(-50%)";
   });
 }
@@ -243,7 +245,7 @@ function initSections() {
 
     const children = section.querySelectorAll(
       ".section-label, .section-heading, .section-body, .section-note, " +
-      ".section-cta-link, .cta-button, .cta-ig, .stat"
+      ".section-cta-link, .cta-button, .cta-ig, .stat, .occasion-link"
     );
 
     const tl = gsap.timeline({ paused: true });
@@ -371,6 +373,19 @@ function initCounters() {
   });
 }
 
+/* ── OCCASION JUMP LINKS ── */
+function initOccasionLinks() {
+  document.querySelectorAll('.occasion-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.getElementById(link.dataset.target);
+      if (!target) return;
+      const enter = parseFloat(target.dataset.enter) / 100;
+      lenis.scrollTo(enter * (scrollContainer.offsetHeight - window.innerHeight), { duration: 1.4 });
+    });
+  });
+}
+
 /* ── BOOT ── */
 async function boot() {
   await initFrames();
@@ -378,6 +393,7 @@ async function boot() {
   initHeroTransition();
   initFrameScroll();
   initSections();
+  initOccasionLinks();
   initDarkOverlay();
   initMarquee();
   initCounters();
