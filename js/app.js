@@ -8,8 +8,8 @@
 const FRAME_COUNT  = 241;
 const IMAGE_SCALE  = 0.78;  /* main canvas: padded (10% smaller than before) */
 const ANIM_START   = 0.11;  /* scroll % where frame animation begins (10% later) */
-const ANIM_END     = 0.73;  /* scroll % where frame animation completes (end of section 4) */
-const FREEZE_AT    = 0.77;  /* scroll % where transition back to frame 0 is complete */
+const ANIM_END     = 0.74;  /* scroll % where frame animation completes (end of section 4) */
+const FREEZE_AT    = 0.78;  /* scroll % where transition back to frame 0 is complete */
 
 /* ── 1. LENIS SMOOTH SCROLL ── */
 const lenis = new Lenis({
