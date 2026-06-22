@@ -109,8 +109,7 @@ function drawFrame(index) {
   const scale = Math.max(cw / iw, ch / ih) * IMAGE_SCALE;
   const dw = iw * scale, dh = ih * scale;
   const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
-  ctx.fillStyle = bgColor;
-  ctx.fillRect(0, 0, cw, ch);
+  ctx.clearRect(0, 0, cw, ch);
   ctx.drawImage(img, dx, dy, dw, dh);
 }
 
@@ -185,6 +184,16 @@ function initHeroTransition() {
       const wipeProgress = Math.min(1, Math.max(0, (p - 0.11) / 0.07));
       const radius = wipeProgress * 80;
       canvasWrap.style.clipPath = `circle(${radius}% at 50% 50%)`;
+
+      /* Quick fade cut: last frame → frame 0 between ANIM_END and FREEZE_AT */
+      if (p > ANIM_END && p < FREEZE_AT) {
+        const t = (p - ANIM_END) / (FREEZE_AT - ANIM_END);
+        canvasWrap.style.opacity = t < 0.5
+          ? String(Math.max(0, 1 - t * 2))
+          : String(Math.min(1, (t - 0.5) * 2));
+      } else {
+        canvasWrap.style.opacity = "1";
+      }
     },
   });
 }
@@ -207,12 +216,11 @@ function initFrameScroll() {
         /* Main animation: frames 0 → 240 over 11%–73% scroll */
         const t = (p - ANIM_START) / (ANIM_END - ANIM_START);
         index = Math.min(Math.floor(t * FRAME_COUNT), FRAME_COUNT - 1);
-      } else if (p <= FREEZE_AT) {
-        /* Smooth return: frames 240 → 0 over 73%–77% scroll */
-        const t = (p - ANIM_END) / (FREEZE_AT - ANIM_END);
-        index = Math.round((FRAME_COUNT - 1) * (1 - t));
+      } else if (p < ANIM_END + (FREEZE_AT - ANIM_END) * 0.5) {
+        /* Fade-out window: hold last frame while canvas fades to black */
+        index = FRAME_COUNT - 1;
       } else {
-        /* Stats + CTA: hold frame 0 */
+        /* Fade-in and beyond: show frame 0 */
         index = 0;
       }
 
