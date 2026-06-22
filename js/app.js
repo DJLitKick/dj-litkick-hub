@@ -5,9 +5,11 @@
    Marquee · Dark overlay · Counters
 ───────────────────────────────────────── */
 
-const FRAME_COUNT = 241;
-const FRAME_SPEED = 2.0;   /* animation completes at ~50% scroll */
-const IMAGE_SCALE = 0.87;  /* padded-cover: avoids clipping into header */
+const FRAME_COUNT  = 241;
+const IMAGE_SCALE  = 0.78;  /* main canvas: padded (10% smaller than before) */
+const ANIM_START   = 0.11;  /* scroll % where frame animation begins (10% later) */
+const ANIM_END     = 0.73;  /* scroll % where frame animation completes (end of section 4) */
+const FREEZE_AT    = 0.77;  /* scroll % where transition back to frame 0 is complete */
 
 /* ── 1. LENIS SMOOTH SCROLL ── */
 const lenis = new Lenis({
@@ -20,27 +22,33 @@ gsap.ticker.add((time) => lenis.raf(time * 1000));
 gsap.ticker.lagSmoothing(0);
 
 /* ── 2. ELEMENT REFS ── */
-const loader        = document.getElementById("loader");
-const loaderBar     = document.getElementById("loader-bar");
-const loaderPct     = document.getElementById("loader-percent");
-const canvasWrap    = document.getElementById("canvas-wrap");
-const canvas        = document.getElementById("canvas");
-const ctx           = canvas.getContext("2d");
-const heroSection   = document.getElementById("hero-standalone");
-const darkOverlay   = document.getElementById("dark-overlay");
-const marqueeWrap   = document.getElementById("marquee");
+const loader          = document.getElementById("loader");
+const loaderBar       = document.getElementById("loader-bar");
+const loaderPct       = document.getElementById("loader-percent");
+const canvasWrap      = document.getElementById("canvas-wrap");
+const canvas          = document.getElementById("canvas");
+const ctx             = canvas.getContext("2d");
+const canvasBlur      = document.getElementById("canvas-blur");
+const ctxBlur         = canvasBlur.getContext("2d");
+const heroSection     = document.getElementById("hero-standalone");
+const darkOverlay     = document.getElementById("dark-overlay");
+const marqueeWrap     = document.getElementById("marquee");
 const scrollContainer = document.getElementById("scroll-container");
-const siteHeader    = document.getElementById("site-header");
-const sections      = document.querySelectorAll(".scroll-section");
+const siteHeader      = document.getElementById("site-header");
+const sections        = document.querySelectorAll(".scroll-section");
 
 /* ── 3. CANVAS SIZING ── */
 let dpr = window.devicePixelRatio || 1;
 function resizeCanvas() {
   dpr = window.devicePixelRatio || 1;
-  canvas.width  = window.innerWidth  * dpr;
-  canvas.height = window.innerHeight * dpr;
-  // drawFrame works in raw canvas pixels — no ctx.scale needed
-  if (frames && frames[currentFrame]) drawFrame(currentFrame);
+  canvas.width      = window.innerWidth  * dpr;
+  canvas.height     = window.innerHeight * dpr;
+  canvasBlur.width  = window.innerWidth  * dpr;
+  canvasBlur.height = window.innerHeight * dpr;
+  if (frames && frames[currentFrame]) {
+    drawFrame(currentFrame);
+    drawBlurFrame(currentFrame);
+  }
 }
 window.addEventListener("resize", resizeCanvas, { passive: true });
 
@@ -48,7 +56,7 @@ window.addEventListener("resize", resizeCanvas, { passive: true });
 const frames = new Array(FRAME_COUNT);
 let loadedCount  = 0;
 let currentFrame = 0;
-resizeCanvas(); // called here so `frames` is already declared
+resizeCanvas();
 
 function padNum(n, digits) { return String(n).padStart(digits, "0"); }
 
@@ -64,17 +72,16 @@ function loadFrame(index) {
       loaderPct.textContent = pct + "%";
       resolve();
     };
-    img.onerror = resolve; /* skip missing frames gracefully */
+    img.onerror = resolve;
   });
 }
 
-/* Two-phase: first 10 frames fast, then rest in background */
 async function initFrames() {
   const firstBatch = Array.from({ length: 10 }, (_, i) => loadFrame(i));
   await Promise.all(firstBatch);
   drawFrame(0);
+  drawBlurFrame(0);
 
-  /* Load remaining frames — hide loader once all done */
   const restBatch = Array.from({ length: FRAME_COUNT - 10 }, (_, i) => loadFrame(i + 10));
   await Promise.all(restBatch);
 
@@ -93,25 +100,36 @@ function sampleBgColor(img) {
   bgColor = `rgb(${d[0]},${d[1]},${d[2]})`;
 }
 
-/* ── 6. CANVAS RENDERER ── */
+/* ── 6. CANVAS RENDERERS ── */
 function drawFrame(index) {
   const img = frames[index];
   if (!img) return;
-
-  // Work in raw canvas pixels (canvas.width already = innerWidth * dpr)
-  const cw = canvas.width;
-  const ch = canvas.height;
-  const iw = img.naturalWidth;
-  const ih = img.naturalHeight;
+  const cw = canvas.width, ch = canvas.height;
+  const iw = img.naturalWidth, ih = img.naturalHeight;
   const scale = Math.max(cw / iw, ch / ih) * IMAGE_SCALE;
-  const dw = iw * scale;
-  const dh = ih * scale;
-  const dx = (cw - dw) / 2;
-  const dy = (ch - dh) / 2;
-
+  const dw = iw * scale, dh = ih * scale;
+  const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
   ctx.fillStyle = bgColor;
   ctx.fillRect(0, 0, cw, ch);
   ctx.drawImage(img, dx, dy, dw, dh);
+}
+
+function drawBlurFrame(index) {
+  const img = frames[index];
+  if (!img) return;
+  const cw = canvasBlur.width, ch = canvasBlur.height;
+  const iw = img.naturalWidth, ih = img.naturalHeight;
+  const scale = Math.max(cw / iw, ch / ih); /* full cover — no padding */
+  const dw = iw * scale, dh = ih * scale;
+  const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
+  ctxBlur.fillStyle = bgColor;
+  ctxBlur.fillRect(0, 0, cw, ch);
+  ctxBlur.drawImage(img, dx, dy, dw, dh);
+}
+
+function renderFrames(index) {
+  drawFrame(index);
+  drawBlurFrame(index);
 }
 
 /* ── 7. MOBILE HAMBURGER ── */
@@ -160,11 +178,11 @@ function initHeroTransition() {
     onUpdate: (self) => {
       const p = self.progress;
 
-      /* Hero fades out quickly */
-      heroSection.style.opacity = Math.max(0, 1 - p * 15).toString();
+      /* Hero fades out 0% → 10% scroll */
+      heroSection.style.opacity = Math.max(0, 1 - p * 10).toString();
 
-      /* Canvas reveals via expanding circle as hero leaves */
-      const wipeProgress = Math.min(1, Math.max(0, (p - 0.01) / 0.07));
+      /* Canvas circle-wipe opens 11% → 18% scroll */
+      const wipeProgress = Math.min(1, Math.max(0, (p - 0.11) / 0.07));
       const radius = wipeProgress * 80;
       canvasWrap.style.clipPath = `circle(${radius}% at 50% 50%)`;
     },
@@ -179,16 +197,29 @@ function initFrameScroll() {
     end: "bottom bottom",
     scrub: true,
     onUpdate: (self) => {
-      const accelerated = Math.min(self.progress * FRAME_SPEED, 1);
-      const index = Math.min(
-        Math.floor(accelerated * FRAME_COUNT),
-        FRAME_COUNT - 1
-      );
+      const p = self.progress;
+      let index;
+
+      if (p < ANIM_START) {
+        /* Before animation starts: hold frame 0 */
+        index = 0;
+      } else if (p <= ANIM_END) {
+        /* Main animation: frames 0 → 240 over 11%–73% scroll */
+        const t = (p - ANIM_START) / (ANIM_END - ANIM_START);
+        index = Math.min(Math.floor(t * FRAME_COUNT), FRAME_COUNT - 1);
+      } else if (p <= FREEZE_AT) {
+        /* Smooth return: frames 240 → 0 over 73%–77% scroll */
+        const t = (p - ANIM_END) / (FREEZE_AT - ANIM_END);
+        index = Math.round((FRAME_COUNT - 1) * (1 - t));
+      } else {
+        /* Stats + CTA: hold frame 0 */
+        index = 0;
+      }
+
       if (index !== currentFrame) {
         currentFrame = index;
-        /* Sample bg color every ~20 frames for seamless padding fill */
         if (index % 20 === 0 && frames[index]) sampleBgColor(frames[index]);
-        requestAnimationFrame(() => drawFrame(currentFrame));
+        requestAnimationFrame(() => renderFrames(currentFrame));
       }
     },
   });
