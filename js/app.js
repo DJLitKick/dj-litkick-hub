@@ -39,16 +39,16 @@ function resizeCanvas() {
   dpr = window.devicePixelRatio || 1;
   canvas.width  = window.innerWidth  * dpr;
   canvas.height = window.innerHeight * dpr;
-  ctx.scale(dpr, dpr);
-  if (frames[currentFrame]) drawFrame(currentFrame);
+  // drawFrame works in raw canvas pixels — no ctx.scale needed
+  if (frames && frames[currentFrame]) drawFrame(currentFrame);
 }
-resizeCanvas();
 window.addEventListener("resize", resizeCanvas, { passive: true });
 
 /* ── 4. FRAME LOADER ── */
 const frames = new Array(FRAME_COUNT);
 let loadedCount  = 0;
 let currentFrame = 0;
+resizeCanvas(); // called here so `frames` is already declared
 
 function padNum(n, digits) { return String(n).padStart(digits, "0"); }
 
@@ -98,8 +98,9 @@ function drawFrame(index) {
   const img = frames[index];
   if (!img) return;
 
-  const cw = canvas.width  / dpr;
-  const ch = canvas.height / dpr;
+  // Work in raw canvas pixels (canvas.width already = innerWidth * dpr)
+  const cw = canvas.width;
+  const ch = canvas.height;
   const iw = img.naturalWidth;
   const ih = img.naturalHeight;
   const scale = Math.max(cw / iw, ch / ih) * IMAGE_SCALE;
@@ -108,12 +109,9 @@ function drawFrame(index) {
   const dx = (cw - dw) / 2;
   const dy = (ch - dh) / 2;
 
-  ctx.save();
-  ctx.scale(dpr, dpr);
   ctx.fillStyle = bgColor;
   ctx.fillRect(0, 0, cw, ch);
   ctx.drawImage(img, dx, dy, dw, dh);
-  ctx.restore();
 }
 
 /* ── 7. MOBILE HAMBURGER ── */
