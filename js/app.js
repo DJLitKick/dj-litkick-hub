@@ -7,7 +7,7 @@
 
 const FRAME_COUNT  = 241;
 const IMAGE_SCALE  = 0.78;  /* main canvas: padded (10% smaller than before) */
-const ANIM_START   = 0.11;  /* scroll % where frame animation begins (10% later) */
+const ANIM_START   = 0.16;  /* scroll % where frame animation begins */
 const ANIM_END     = 0.74;  /* scroll % where frame animation completes (end of section 4) */
 const FREEZE_AT    = 0.78;  /* scroll % where transition back to frame 0 is complete */
 
@@ -183,7 +183,7 @@ function initHeroTransition() {
       heroSection.style.opacity = Math.max(0, 1 - p * 10).toString();
 
       /* Canvas circle-wipe opens 11% → 18% scroll */
-      const wipeProgress = Math.min(1, Math.max(0, (p - 0.11) / 0.07));
+      const wipeProgress = Math.min(1, Math.max(0, (p - 0.16) / 0.07));
       const radius = wipeProgress * 80;
       canvasWrap.style.clipPath = `circle(${radius}% at 50% 50%)`;
 
@@ -381,7 +381,7 @@ function initOccasionLinks() {
       const target = document.getElementById(link.dataset.target);
       if (!target) return;
       const enter = parseFloat(target.dataset.enter) / 100;
-      lenis.scrollTo(enter * (scrollContainer.offsetHeight - window.innerHeight), { duration: 1.4 });
+      lenis.scrollTo((enter + 0.05) * (scrollContainer.offsetHeight - window.innerHeight), { duration: 1.4 });
     });
   });
 }
